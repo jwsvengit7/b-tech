@@ -31,7 +31,7 @@ export default function App() {
   const [amount, setAmount] = useState<string>("");
 
   const handleActivate = () => {
-    if (code === mockActivationCode) {
+    if (code.trim() === mockActivationCode) {
       Swal.fire({
         icon: "success",
         title: "Activated!",
@@ -48,7 +48,9 @@ export default function App() {
   };
 
   const handleTransfer = () => {
-    const amt = parseFloat(amount);
+    // Remove commas and spaces before parse
+    const cleaned = amount.replace(/[, ]+/g, "");
+    const amt = parseFloat(cleaned);
     if (isNaN(amt) || amt <= 0) {
       return Swal.fire({
         icon: "warning",
@@ -64,7 +66,7 @@ export default function App() {
       });
     }
 
-    setBalance((b) => b - amt);
+    setBalance((b) => +(b - amt).toFixed(2));
     setAmount("");
     Swal.fire({
       icon: "success",
@@ -74,6 +76,11 @@ export default function App() {
     });
   };
 
+  /**
+   * Input component:
+   * - Accepts either an event or a raw value in onChange (robust to wrappers).
+   * - Always controlled via value prop.
+   */
   const Input = ({
     placeholder,
     type = "text",
@@ -83,16 +90,23 @@ export default function App() {
     placeholder: string;
     type?: string;
     value: string | number | undefined;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  }) => (
-    <input
-      className="input"
-      placeholder={placeholder}
-      type={type}
-      value={value ?? ""}
-      onChange={onChange}
-    />
-  );
+    onChange: (eOrVal: React.ChangeEvent<HTMLInputElement> | string) => void;
+  }) => {
+    // internal handler converts native event to either event or value
+    const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(e);
+    };
+
+    return (
+      <input
+        className="input"
+        placeholder={placeholder}
+        type={type}
+        value={value ?? ""}
+        onChange={handle}
+      />
+    );
+  };
 
   const Card = ({
     title,
@@ -106,7 +120,11 @@ export default function App() {
     <div className="card">
       <div className="card-header">
         {onBack && (
-          <button className="back-btn" onClick={onBack}>
+          <button
+            className="back-btn"
+            type="button"
+            onClick={onBack}
+          >
             ← Back
           </button>
         )}
@@ -125,9 +143,19 @@ export default function App() {
           <Input
             placeholder="Activation Code"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(eOrVal) => {
+              const v =
+                typeof eOrVal === "string"
+                  ? eOrVal
+                  : eOrVal.target?.value ?? "";
+              setCode(v);
+            }}
           />
-          <button onClick={handleActivate} className="btn primary full">
+          <button
+            type="button"
+            onClick={handleActivate}
+            className="btn primary full"
+          >
             Activate
           </button>
         </Card>
@@ -141,8 +169,25 @@ export default function App() {
           </div>
 
           <div className="btn-row">
-            <button className="btn purple">BVN Pull</button>
-            <button onClick={() => setPage("account")} className="btn green">
+            <button
+              type="button"
+              className="btn purple"
+              onClick={() =>
+                Swal.fire({
+                  icon: "info",
+                  title: "BVN Pull (Demo)",
+                  text: "This is a demo button — no real BVN pull will occur.",
+                })
+              }
+            >
+              BVN Pull
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPage("account")}
+              className="btn green"
+            >
               Account
             </button>
           </div>
@@ -152,47 +197,55 @@ export default function App() {
             {mockHistory.map((item, i) => (
               <div key={i} className="history-item">
                 <span>{item.label}</span>
-                <span className="amount">₦{item.amount.toLocaleString()}</span>
+                <span className="amount">
+                  ₦{item.amount.toLocaleString(undefined)}
+                </span>
               </div>
             ))}
           </div>
         </Card>
       )}
 
-
       {page === "account" && (
-  <Card title="Account Information" onBack={() => setPage("dashboard")}>
-    {(
-      [
-        { key: "name", label: "Account Name" },
-        { key: "accountNumber", label: "Account Number" },
-        { key: "bvn", label: "BVN" },
-        { key: "dob", label: "Date of Birth" },
-        { key: "customerId", label: "Customer ID" },
-        { key: "username", label: "Username" },
-        { key: "password", label: "Password", type: "password" },
-      ] as { key: keyof AccountDetails; label: string; type?: string }[]
-    ).map(({ key, label, type }) => (
-      <Input
-        key={key}
-        placeholder={label}
-        type={type || "text"}
-        value={account[key] ?? ""}
-        onChange={(e) =>
-          setAccount((prev) => ({
-            ...prev,
-            [key]: e.target.value,
-          }))
-        }
-      />
-    ))}
+        <Card title="Account Information" onBack={() => setPage("dashboard")}>
+          {(
+            [
+              { key: "name", label: "Account Name" },
+              { key: "accountNumber", label: "Account Number" },
+              { key: "bvn", label: "BVN" },
+              { key: "dob", label: "Date of Birth" },
+              { key: "customerId", label: "Customer ID" },
+              { key: "username", label: "Username" },
+              { key: "password", label: "Password", type: "password" },
+            ] as { key: keyof AccountDetails; label: string; type?: string }[]
+          ).map(({ key, label, type }) => (
+            <Input
+              key={key}
+              placeholder={label}
+              type={type || "text"}
+              value={account[key] ?? ""}
+              onChange={(eOrVal) => {
+                const val =
+                  typeof eOrVal === "string"
+                    ? eOrVal
+                    : eOrVal.target?.value ?? "";
+                setAccount((prev) => ({
+                  ...prev,
+                  [key]: val,
+                }));
+              }}
+            />
+          ))}
 
-    <button onClick={() => setPage("transfer")} className="btn primary full">
-      Continue
-    </button>
-  </Card>
-)}
-
+          <button
+            type="button"
+            onClick={() => setPage("transfer")}
+            className="btn primary full"
+          >
+            Continue
+          </button>
+        </Card>
+      )}
 
       {page === "transfer" && (
         <Card title="Transfer Funds" onBack={() => setPage("account")}>
@@ -203,18 +256,28 @@ export default function App() {
             <strong>Account Number:</strong> {account.accountNumber || "—"}
           </p>
 
-          <div className="balance">
-            Balance: ₦{balance.toLocaleString()}
-          </div>
+          <div className="balance">Balance: ₦{balance.toLocaleString()}</div>
 
           <Input
             placeholder="Enter Amount"
-            type="number"
+            type="text" // use text so user can paste formatted numbers like "1,000,000"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(eOrVal) => {
+              const v =
+                typeof eOrVal === "string"
+                  ? eOrVal
+                  : eOrVal.target?.value ?? "";
+              // allow numbers, commas and spaces only
+              const cleaned = v.replace(/[^\d,.\s]/g, "");
+              setAmount(cleaned);
+            }}
           />
 
-          <button onClick={handleTransfer} className="btn green full">
+          <button
+            type="button"
+            onClick={handleTransfer}
+            className="btn green full"
+          >
             Transfer
           </button>
         </Card>
