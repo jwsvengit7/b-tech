@@ -70,8 +70,8 @@ export default function App() {
     setAmount("");
     Swal.fire({
       icon: "success",
-      title: "Transfer Successful 💸",
-      text: `₦${amt.toLocaleString()} has been transferred successfully!`,
+      title: "Transfer Pending 💸",
+      text: `₦${amt.toLocaleString()} has been transferred!`,
       confirmButtonColor: "#16a34a",
     });
   };
@@ -81,32 +81,28 @@ export default function App() {
    * - Accepts either an event or a raw value in onChange (robust to wrappers).
    * - Always controlled via value prop.
    */
-  const Input = ({
-    placeholder,
-    type = "text",
-    value,
-    onChange,
-  }: {
-    placeholder: string;
-    type?: string;
-    value: string | number | undefined;
-    onChange: (eOrVal: React.ChangeEvent<HTMLInputElement> | string) => void;
-  }) => {
-    // internal handler converts native event to either event or value
-    const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e);
-    };
+ const Input = ({
+  placeholder,
+  type = "text",
+  value,
+  onChange,
+}: {
+  placeholder: string;
+  type?: string;
+  value: string | number | undefined;
+  onChange: (value: string) => void;
+}) => {
+  return (
+    <input
+      className="input"
+      placeholder={placeholder}
+      type={type}
+      value={value ?? ""}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
+};
 
-    return (
-      <input
-        className="input"
-        placeholder={placeholder}
-        type={type}
-        value={value ?? ""}
-        onChange={handle}
-      />
-    );
-  };
 
   const Card = ({
     title,
@@ -143,13 +139,7 @@ export default function App() {
           <Input
             placeholder="Activation Code"
             value={code}
-            onChange={(eOrVal) => {
-              const v =
-                typeof eOrVal === "string"
-                  ? eOrVal
-                  : eOrVal.target?.value ?? "";
-              setCode(v);
-            }}
+           onChange={(val) => setCode(val)}
           />
           <button
             type="button"
@@ -212,16 +202,13 @@ export default function App() {
               placeholder={label}
               type={type || "text"}
               value={account[key] ?? ""}
-              onChange={(eOrVal) => {
-                const val =
-                  typeof eOrVal === "string"
-                    ? eOrVal
-                    : eOrVal.target?.value ?? "";
-                setAccount((prev) => ({
-                  ...prev,
-                  [key]: val,
-                }));
-              }}
+          onChange={(val) =>
+  setAccount((prev) => ({
+    ...prev,
+    [key]: val,
+  }))
+}
+
             />
           ))}
 
@@ -246,20 +233,16 @@ export default function App() {
 
           <div className="balance">Balance: ₦{balance.toLocaleString()}</div>
 
-          <Input
-            placeholder="Enter Amount"
-            type="text" // use text so user can paste formatted numbers like "1,000,000"
-            value={amount}
-            onChange={(eOrVal) => {
-              const v =
-                typeof eOrVal === "string"
-                  ? eOrVal
-                  : eOrVal.target?.value ?? "";
-              // allow numbers, commas and spaces only
-              const cleaned = v.replace(/[^\d,.\s]/g, "");
-              setAmount(cleaned);
-            }}
-          />
+       <Input
+  placeholder="Enter Amount"
+  type="text"
+  value={amount}
+  onChange={(val) => {
+    const cleaned = val.replace(/[^\d,.\s]/g, "");
+    setAmount(cleaned);
+  }}
+/>
+
 
           <button
             type="button"
