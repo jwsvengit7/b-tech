@@ -76,7 +76,7 @@ const mockHistory = [
     </div>
   );
 
-  
+
 export default function App() {
   const [page, setPage] = useState<Page>("activation");
   const [code, setCode] = useState("");
@@ -166,7 +166,7 @@ export default function App() {
       )}
 
       {page === "dashboard" && (
-        <Card title="Flash Fund Dashboard" onBack={() => setPage("activation")}>
+        <Card title="sagiru lawan Dashboard" onBack={() => setPage("activation")}>
           <div className="balance-display">
             <h3>Current Balance</h3>
             <p>₦{balance.toLocaleString()}</p>
