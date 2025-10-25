@@ -169,7 +169,7 @@ export default function App() {
         <Card title="sagiru lawan Dashboard" onBack={() => setPage("activation")}>
           <div className="balance-display">
             <h3>Current Balance</h3>
-            <p>₦{balance.toLocaleString()}</p>
+            <p>₦899,999,999,991</p>
           </div>
 
           <div className="btn-row">
