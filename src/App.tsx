@@ -159,35 +159,40 @@ export default function App() {
         </Card>
       )}
 
+
       {page === "account" && (
-        <Card title="Account Information" onBack={() => setPage("dashboard")}>
-          {[
-            "name",
-            "accountNumber",
-            "bvn",
-            "dob",
-            "customerId",
-            "username",
-            "password",
-          ].map((field) => (
-            <Input
-              key={field}
-              placeholder={
-                field.charAt(0).toUpperCase() +
-                field.slice(1).replace(/([A-Z])/g, " $1")
-              }
-              type={field === "password" ? "password" : "text"}
-              value={(account as never)[field] || ""}
-              onChange={(e) =>
-                setAccount({ ...account, [field]: e.target.value })
-              }
-            />
-          ))}
-          <button onClick={() => setPage("transfer")} className="btn primary full">
-            Continue
-          </button>
-        </Card>
-      )}
+  <Card title="Account Information" onBack={() => setPage("dashboard")}>
+    {(
+      [
+        { key: "name", label: "Account Name" },
+        { key: "accountNumber", label: "Account Number" },
+        { key: "bvn", label: "BVN" },
+        { key: "dob", label: "Date of Birth" },
+        { key: "customerId", label: "Customer ID" },
+        { key: "username", label: "Username" },
+        { key: "password", label: "Password", type: "password" },
+      ] as { key: keyof AccountDetails; label: string; type?: string }[]
+    ).map(({ key, label, type }) => (
+      <Input
+        key={key}
+        placeholder={label}
+        type={type || "text"}
+        value={account[key] ?? ""}
+        onChange={(e) =>
+          setAccount((prev) => ({
+            ...prev,
+            [key]: e.target.value,
+          }))
+        }
+      />
+    ))}
+
+    <button onClick={() => setPage("transfer")} className="btn primary full">
+      Continue
+    </button>
+  </Card>
+)}
+
 
       {page === "transfer" && (
         <Card title="Transfer Funds" onBack={() => setPage("account")}>
