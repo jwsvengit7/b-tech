@@ -169,19 +169,7 @@ export default function App() {
           </div>
 
           <div className="btn-row">
-            <button
-              type="button"
-              className="btn purple"
-              onClick={() =>
-                Swal.fire({
-                  icon: "info",
-                  title: "BVN Pull (Demo)",
-                  text: "This is a demo button — no real BVN pull will occur.",
-                })
-              }
-            >
-              BVN Pull
-            </button>
+           
 
             <button
               type="button"
