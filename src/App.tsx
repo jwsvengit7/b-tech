@@ -83,6 +83,7 @@ export default function App() {
   const [account, setAccount] = useState<Partial<AccountDetails>>({});
   const [balance, setBalance] = useState<number>(900_000_000_000.0);
   const [amount, setAmount] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const handleActivate = () => {
     if (code.trim() === mockActivationCode) {
@@ -120,14 +121,20 @@ export default function App() {
       });
     }
 
-    setBalance((b) => +(b - amt).toFixed(2));
-    setAmount("");
-    Swal.fire({
-      icon: "success",
-      title: "Transfer Pending 💸",
-      text: `₦${amt.toLocaleString()} has been transferred!`,
-      confirmButtonColor: "#16a34a",
-    });
+
+    
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setBalance((b) => +(b - amt).toFixed(2));
+      setAmount("");
+      Swal.fire({
+        icon: "success",
+        title: "Transfer Pending 💸",
+        text: `₦${amt.toLocaleString()} has been transferred!`,
+        confirmButtonColor: "#16a34a",
+      });
+    }, 120000); 
   };
 
   /**
@@ -141,6 +148,12 @@ export default function App() {
   return (
     <div className="app">
       <h1 className="title">BTECH</h1>
+        {loading && (
+        <div className="overlay">
+          <div className="spinner"></div>
+          <p className="loading-text">Processing transfer... Please wait ⏳</p>
+        </div>
+      )}
 
       {page === "activation" && (
         <Card title="Enter Activation Code">
@@ -248,7 +261,7 @@ export default function App() {
             <strong>Account Number:</strong> {account.accountNumber || "—"}
           </p>
 
-          <div className="balance">Balance: ₦{balance.toLocaleString()}</div>
+          <div className="balance">Balance: ₦359,000,000,000</div>
 
           <Input
             placeholder="Enter Amount"
