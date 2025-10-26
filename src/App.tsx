@@ -183,6 +183,7 @@ export default function App() {
           <div className="balance-display">
             <h3>Current Balance</h3>
             <p>₦1,000,000.00</p>
+            
           </div>
 
           <div className="btn-row">
