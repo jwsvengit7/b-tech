@@ -16,66 +16,73 @@ interface AccountDetails {
   password: string;
 }
 
-const mockHistory = [
-  { label: "Fund Wallet", amount: 3_000_000.0 },
-  { label: "Fund Wallet", amount: 100_000.0 },
-  { label: "Fund Wallet", amount: 1_500_000.0 },
-  { label: "Fund Wallet", amount: 2_000_000.0 },
+interface Transaction {
+  label: string;
+  amount: number;
+  name?: string;
+  bank?: string;
+  status?: string;
+}
+
+
+const mockHistory: Transaction[] = [
+  {
+    label: "Transfer to D & G",
+    amount: 200_000_000.0,
+    name: "Aisah Bello",
+    bank: "D & G Steal Company Limited",
+    status: "Failed",
+  },
+  { label: "Fund Wallet", amount: 100_000.0, bank: "BTECH MFB", status: "Pending" },
 ];
 
- const Input = ({
-    placeholder,
-    type = "text",
-    value,
-    onChange,
-  }: {
-    placeholder: string;
-    type?: string;
-    value: string | number | undefined;
-    onChange: (eOrVal: React.ChangeEvent<HTMLInputElement> | string) => void;
-  }) => {
-    // internal handler converts native event to either event or value
-    const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e);
-    };
 
-    return (
-      <input
-        className="input"
-        placeholder={placeholder}
-        type={type}
-        value={value ?? ""}
-        onChange={handle}
-      />
-    );
+const Input = ({
+  placeholder,
+  type = "text",
+  value,
+  onChange,
+}: {
+  placeholder: string;
+  type?: string;
+  value: string | number | undefined;
+  onChange: (eOrVal: React.ChangeEvent<HTMLInputElement> | string) => void;
+}) => {
+  const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e);
   };
-
-   const Card = ({
-    title,
-    children,
-    onBack,
-  }: {
-    title: string;
-    children: React.ReactNode;
-    onBack?: () => void;
-  }) => (
-    <div className="card">
-      <div className="card-header">
-        {onBack && (
-          <button
-            className="back-btn"
-            type="button"
-            onClick={onBack}
-          >
-            ← Back
-          </button>
-        )}
-        <h2 className="subtitle">{title}</h2>
-      </div>
-      {children}
-    </div>
+  return (
+    <input
+      className="input"
+      placeholder={placeholder}
+      type={type}
+      value={value ?? ""}
+      onChange={handle}
+    />
   );
+};
 
+const Card = ({
+  title,
+  children,
+  onBack,
+}: {
+  title: string;
+  children: React.ReactNode;
+  onBack?: () => void;
+}) => (
+  <div className="card">
+    <div className="card-header">
+      {onBack && (
+        <button className="back-btn" type="button" onClick={onBack}>
+          ← Back
+        </button>
+      )}
+      <h2 className="subtitle">{title}</h2>
+    </div>
+    {children}
+  </div>
+);
 
 export default function App() {
   const [page, setPage] = useState<Page>("activation");
@@ -103,7 +110,6 @@ export default function App() {
   };
 
   const handleTransfer = () => {
-    // Remove commas and spaces before parse
     const cleaned = amount.replace(/[, ]+/g, "");
     const amt = parseFloat(cleaned);
     if (isNaN(amt) || amt <= 0) {
@@ -121,8 +127,6 @@ export default function App() {
       });
     }
 
-
-    
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -134,21 +138,14 @@ export default function App() {
         text: `₦${amt.toLocaleString()} has been transferred!`,
         confirmButtonColor: "#16a34a",
       });
-    }, 120000); 
+    }, 120000);
   };
 
-  /**
-   * Input component:
-   * - Accepts either an event or a raw value in onChange (robust to wrappers).
-   * - Always controlled via value prop.
-   */
- 
-
- 
   return (
     <div className="app">
       <h1 className="title">BTECH</h1>
-        {loading && (
+
+      {loading && (
         <div className="overlay">
           <div className="spinner"></div>
           <p className="loading-text">Processing transfer... Please wait ⏳</p>
@@ -179,37 +176,53 @@ export default function App() {
       )}
 
       {page === "dashboard" && (
-        <Card title="sagiru lawan Dashboard" onBack={() => setPage("activation")}>
-          <div className="balance-display">
-            <h3>Current Balance</h3>
-            <p>₦349,000.00</p>
+        <div className="dashboard-layout">
+          {/* Receipt on the left */}
+      
 
-          </div>
 
-          <div className="btn-row">
-           
+          {/* Dashboard Card */}
+          <Card title="Sagiru Lawan Dashboard" onBack={() => setPage("activation")}>
+            <div className="balance-display">
+              <h3>Current Balance</h3>
+              <p>₦349,000.00</p>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setPage("account")}
-              className="btn green"
-            >
-              Account
-            </button>
-          </div>
+            <div className="btn-row">
+              <button
+                type="button"
+                onClick={() => setPage("account")}
+                className="btn green"
+              >
+                Account
+              </button>
+            </div>
 
-          <h3 className="section-title">Transaction History</h3>
+            <h3 className="section-title">Transaction History</h3>
           <div className="history">
-            {mockHistory.map((item, i) => (
-              <div key={i} className="history-item">
-                <span>{item.label}</span>
-                <span className="amount">
-                  ₦{item.amount.toLocaleString(undefined)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Card>
+            
+  {mockHistory.map((selectedTransactions, i) => (
+    selectedTransactions &&(
+      <>
+     <div key={i} className="receipt-content">
+      <p><strong>Type:</strong> {selectedTransactions?.label}</p>
+      <p><strong>Name:</strong> {selectedTransactions?.name || "—"}</p>
+      <p><strong>Recipt:</strong> {selectedTransactions?.bank || "—"}</p>
+      <p><strong>Amount:</strong> ₦{selectedTransactions?.amount.toLocaleString()}</p>
+      <p>
+        <strong>Status:</strong>{" "}
+        {selectedTransactions?.status === "Successful" ? "✅ Successful" : `⌛ ${selectedTransactions?.status}`}
+      </p>
+      <p><strong>Date:</strong> {new Date().toLocaleString()}</p>
+    </div>
+    <hr />
+    </>
+    )
+  ))}
+</div>
+
+          </Card>
+        </div>
       )}
 
       {page === "account" && (
@@ -266,14 +279,13 @@ export default function App() {
 
           <Input
             placeholder="Enter Amount"
-            type="text" // use text so user can paste formatted numbers like "1,000,000"
+            type="text"
             value={amount}
             onChange={(eOrVal) => {
               const v =
                 typeof eOrVal === "string"
                   ? eOrVal
                   : eOrVal.target?.value ?? "";
-              // allow numbers, commas and spaces only
               const cleaned = v.replace(/[^\d,.\s]/g, "");
               setAmount(cleaned);
             }}

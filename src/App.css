@@ -1,5 +1,146 @@
 /* ===== Global Reset ===== */
 
+/* ===== Transfer Page Layout ===== */
+.transfer-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+/* Make the transfer card larger */
+.transfer-layout .card {
+  width: 100%;
+  max-width: 600px;
+  padding: 32px 26px;
+  min-height: 500px;
+}
+
+/* ===== Receipt Panel ===== */
+.receipt-card {
+  flex: 1;
+  min-width: 280px;
+  max-width: 320px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  padding: 20px 18px;
+  color: #111827;
+  animation: slideIn 0.4s ease;
+  height: fit-content;
+  position: relative;
+}
+
+.receipt-card h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #1e293b;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+.receipt-content p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .transfer-layout {
+    flex-direction: column;
+  }
+  .receipt-card {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+}
+
+
+/* ===== Dashboard Layout with Left Receipt ===== */
+.dashboard-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* Receipt Card (on the left side) */
+.receipt-card.left {
+  order: -1;
+  flex: 1;
+  min-width: 280px;
+  max-width: 320px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  padding: 20px 18px;
+  color: #111827;
+  animation: slideInLeft 0.4s ease;
+  height: fit-content;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Make transactions clickable */
+.history-item.clickable {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.history-item.clickable:hover {
+  background: #e0f2fe;
+}
+
+/* Red Close Button */
+.btn.red {
+  background: #dc2626;
+  color: white;
+}
+.btn.red:hover {
+  background: #b91c1c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .receipt-card.left {
+    max-width: 100%;
+    order: 0;
+    margin-bottom: 15px;
+  }
+}
+
 /* Loader Overlay */
 .overlay {
   position: fixed;
