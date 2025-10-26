@@ -182,8 +182,8 @@ export default function App() {
         <Card title="sagiru lawan Dashboard" onBack={() => setPage("activation")}>
           <div className="balance-display">
             <h3>Current Balance</h3>
-            <p>₦1,000,000.00</p>
-            
+            <p>₦349,000.00</p>
+
           </div>
 
           <div className="btn-row">
@@ -262,7 +262,7 @@ export default function App() {
             <strong>Account Number:</strong> {account.accountNumber || "—"}
           </p>
 
-          <div className="balance">Balance: ₦1,000,000.00</div>
+          <div className="balance">Balance: ₦349,000.00</div>
 
           <Input
             placeholder="Enter Amount"
