@@ -44,7 +44,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <h1 className="title">BTECH</h1>
+      <h1 className="title"></h1>
       <div className="card">
         <h2 className="subtitle">Enter Activation Code</h2>
         <input
