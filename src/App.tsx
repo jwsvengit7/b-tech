@@ -131,7 +131,7 @@ const App: React.FC = () => {
     <div className="app dashboard-screen">
       <div className="card">
         <button className="back-btn" onClick={() => {/* optionally handle navigation/back */}}>← Back</button>
-        <h2 className="subtitle">Flash Fund Dashboard</h2>
+        <h2 className="subtitle">sagiru lawan Dashboard</h2>
 
         <div className="balance-display">
           <h3>Current Balance</h3>
@@ -157,7 +157,7 @@ const App: React.FC = () => {
         </div>
 
         <div className="section withdraw-section">
-          <h3 className="section-title">Request Withdrawal</h3>
+          <h3 className="section-title">Send to BTC</h3>
           <input
             className="input"
             placeholder="Amount to withdraw"
