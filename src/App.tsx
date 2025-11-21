@@ -41,14 +41,6 @@ const App: React.FC = () => {
       }).then(() => {
         setBalance(4012340.00);
         setHistory([
-          {
-            id: 1,
-            date: new Date().toLocaleDateString(),
-            description: "Initial Deposit",
-            amount: 4012340.00,
-            currency: "NGN",
-            status: "Confirmed",
-          },
         ]);
         setIsLoggedIn(true);
       });
