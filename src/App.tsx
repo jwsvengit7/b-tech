@@ -36,17 +36,17 @@ const App: React.FC = () => {
       Swal.fire({
         icon: "success",
         title: "Activation Successful 🎉",
-        text: "Your payment of 2,055 USDT has been confirmed.",
+        text: "Your payment of ₦4,012,340.00 has been confirmed.",
         confirmButtonColor: "#16a34a",
       }).then(() => {
-        setBalance(2055);
+        setBalance(4012340.00);
         setHistory([
           {
             id: 1,
             date: new Date().toLocaleDateString(),
             description: "Activation payment",
             amount: 4012340.00,
-            currency: "USDT",
+            currency: "NGN",
             status: "Confirmed",
           },
         ]);
@@ -59,6 +59,10 @@ const App: React.FC = () => {
         text: "❌ The activation code you entered is incorrect.",
       });
     }
+  };
+
+  const formatCurrency = (value: number) => {
+    return "₦" + value.toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const handleRequestWithdrawal = () => {
@@ -75,7 +79,7 @@ const App: React.FC = () => {
       Swal.fire({
         icon: "error",
         title: "Insufficient balance",
-        text: `You cannot withdraw more than your current balance (${balance} USDT).`,
+        text: `You cannot withdraw more than your current balance (${formatCurrency(balance)}).`,
       });
       return;
     }
@@ -84,7 +88,7 @@ const App: React.FC = () => {
       id: withdrawals.length + 1,
       date: new Date().toLocaleDateString(),
       amount: amt,
-      currency: "USDT",
+      currency: "NGN",
       status: "Pending",
     };
     setWithdrawals([...withdrawals, newWithdraw]);
@@ -94,7 +98,7 @@ const App: React.FC = () => {
     Swal.fire({
       icon: "info",
       title: "Withdrawal Requested",
-      text: `Your request to withdraw ${amt} USDT is now pending.`,
+      text: `Your request to withdraw ${formatCurrency(amt)} is now pending.`,
       confirmButtonColor: "#16a34a",
     });
   };
@@ -126,14 +130,33 @@ const App: React.FC = () => {
   return (
     <div className="app dashboard-screen">
       <div className="card">
-        <h2 className="subtitle">Dashboard</h2>
+        <button className="back-btn" onClick={() => {/* optionally handle navigation/back */}}>← Back</button>
+        <h2 className="subtitle">Flash Fund Dashboard</h2>
 
         <div className="balance-display">
-          <h3>sagiru lawan</h3>
-          <p>{balance} USDT</p>
+          <h3>Current Balance</h3>
+          <p className="large-balance">{formatCurrency(balance)}</p>
         </div>
 
+        <button className="btn green full account-btn">Account</button>
+
         <div className="section">
+          <h3 className="section-title">Transaction History</h3>
+          {history.length === 0 ? (
+            <p>No history yet.</p>
+          ) : (
+            <ul className="history">
+              {history.map((tx) => (
+                <li key={tx.id} className="history-item">
+                  <span>{tx.description}</span>
+                  <span className="amount">{formatCurrency(tx.amount)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="section withdraw-section">
           <h3 className="section-title">Request Withdrawal</h3>
           <input
             className="input"
@@ -151,22 +174,6 @@ const App: React.FC = () => {
         </div>
 
         <div className="section">
-          <h3 className="section-title">Transaction History</h3>
-          {history.length === 0 ? (
-            <p>No history yet.</p>
-          ) : (
-            <ul className="history">
-              {history.map((tx) => (
-                <li key={tx.id} className="history-item">
-                  <span>{tx.date}</span> — <span>{tx.description}</span> —{" "}
-                  <span>{tx.amount} {tx.currency}</span> — <span>{tx.status}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="section">
           <h3 className="section-title">Your Withdrawal Requests</h3>
           {withdrawals.length === 0 ? (
             <p>No withdrawals requested yet.</p>
@@ -174,9 +181,8 @@ const App: React.FC = () => {
             <ul className="history">
               {withdrawals.map((wd) => (
                 <li key={wd.id} className="history-item">
-                  <span>{wd.date}</span> — Withdraw{" "}
-                  <span>{wd.amount} {wd.currency}</span> —{" "}
-                  <span>{wd.status}</span>
+                  <span>{wd.date} — Withdraw {formatCurrency(wd.amount)}</span>
+                  <span className="status">{wd.status}</span>
                 </li>
               ))}
             </ul>
