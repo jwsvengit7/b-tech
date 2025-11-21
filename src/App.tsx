@@ -44,7 +44,7 @@ const App: React.FC = () => {
           {
             id: 1,
             date: new Date().toLocaleDateString(),
-            description: "Activation payment",
+            description: "Initial Deposit",
             amount: 4012340.00,
             currency: "NGN",
             status: "Confirmed",
