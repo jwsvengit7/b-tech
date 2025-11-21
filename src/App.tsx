@@ -129,7 +129,7 @@ const App: React.FC = () => {
         <h2 className="subtitle">Dashboard</h2>
 
         <div className="balance-display">
-          <h3>Your Balance</h3>
+          <h3>sagiru lawan</h3>
           <p>{balance} USDT</p>
         </div>
 
