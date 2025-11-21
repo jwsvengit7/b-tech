@@ -35,8 +35,8 @@ const App: React.FC = () => {
     if (code.trim() === mockActivationCode) {
       Swal.fire({
         icon: "success",
-        title: "Activation Successful 🎉",
-        text: "Your payment of ₦4,012,340.00 has been confirmed.",
+        title: "Successful 🎉",
+        text: "Successfully activated your account.",
         confirmButtonColor: "#16a34a",
       }).then(() => {
         setBalance(4012340.00);
